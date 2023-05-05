@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"getdolar/alertzy"
+	"getdolar/cryptoya"
 	"getdolar/dolar"
 	"log"
 	"os"
@@ -17,7 +18,12 @@ func main() {
 		log.Fatal("API key for Alertzy was not provided")
 	}
 	log.Println("API key loaded just fine")
-	r, err := dolar.GetDolar()
+	dolar, err := dolar.GetDolar()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	log.Println("dolar info loaded fine")
+	usdt, err := cryptoya.GetCrypto("fiwind", "usdt")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -25,7 +31,8 @@ func main() {
 	msg := fmt.Sprintf(`
 	Dolar blue: %.2[1]f
 	Dolar oficial: %.2[2]f
-	`, r.BlueUSD.Sell, r.OficialUSD.Sell)
+	USDT en fiwind: %.2[2]f
+	`, dolar.BlueUSD.Sell, dolar.OficialUSD.Sell, usdt.TotalBid)
 	err = alertzy.SendNotification(key, "Dolar Values", msg, 0, "Dolar Values")
 	if err != nil {
 		log.Fatal(err.Error())
