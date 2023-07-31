@@ -31,7 +31,7 @@ func main() {
 	msg := fmt.Sprintf(`
 	Dolar blue: %.2[1]f
 	Dolar oficial: %.2[2]f
-	USDT en fiwind: %.2[2]f
+	USDT en fiwind: %.2[3]f
 	`, dolar.BlueUSD.Sell, dolar.OficialUSD.Sell, usdt.TotalBid)
 	err = alertzy.SendNotification(key, "Dolar Values", msg, 0, "Dolar Values")
 	if err != nil {

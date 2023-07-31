@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: get-dolar
+  namespace: default
+  labels:
+    app.kubernetes.io/name: get-dolar
+  annotations:
+spec:
+  schedule: 0 15 * * *
+  concurrencyPolicy: Forbid
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: get-dolar
+              image: 10.0.0.4/library/get-dolar:latest
+              env:
+                - name: ALERTZY_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: alertzy-api-key
+                      key: ALERTZY_API_KEY
+              resources:
+                limits:
+                  cpu: 50m
+                  memory: 50Mi
+                requests:
+                  cpu: 50m
+                  memory: 50Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              imagePullPolicy: Always
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 30
+          shareProcessNamespace: true
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
